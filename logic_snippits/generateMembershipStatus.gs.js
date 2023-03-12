@@ -15,7 +15,7 @@
 
 
 function generateMembershipStatus() {
-  var targetYear = 2023; // Change this to the year you want to target
+  var targetYear = 2022; // Change this to the year you want to target
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var transactionsSheet = ss.getSheetByName('Transactions'); // Change this to the name of the sheet with your data
   var dataRange = transactionsSheet.getDataRange();
@@ -56,7 +56,7 @@ function generateMembershipStatus() {
       membershipStatus = 'Active';
       marchAugustSheet.appendRow([date, name, text, paymentAmount, membershipStatus, comment]);
     } else if (isMemberActiveInSeptemberFebruary(date, targetYear)) {
-      membershipStatus = 'Inactive';
+      membershipStatus = 'Active';
       septemberFebruarySheet.appendRow([date, name, text, paymentAmount, membershipStatus, comment]);
     }
   }
