@@ -15,7 +15,7 @@
 
 
 function generateMembershipStatus() {
-  var targetYear = 2022; // Change this to the year you want to target
+  var targetYear = 2023; // Change this to the year you want to target
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var transactionsSheet = ss.getSheetByName('Transactions'); // Change this to the name of the sheet with your data
   var dataRange = transactionsSheet.getDataRange();
@@ -51,18 +51,12 @@ function generateMembershipStatus() {
       continue;
     }
 
-    // Determine if member is active or inactive based on their payment date and amount
-    var membershipStatus;
-    if (paymentAmount >= 150 && isPaymentWithinActivePeriod(date, targetYear)) {
-      membershipStatus = 'Active';
-    } else {
-      membershipStatus = 'Inactive';
-    }
-
     // Determine which period the member is active in and add them to the correct sheet
     if (isMemberActiveInMarchAugust(date, targetYear)) {
+      membershipStatus = 'Active';
       marchAugustSheet.appendRow([date, name, text, paymentAmount, membershipStatus, comment]);
     } else if (isMemberActiveInSeptemberFebruary(date, targetYear)) {
+      membershipStatus = 'Inactive';
       septemberFebruarySheet.appendRow([date, name, text, paymentAmount, membershipStatus, comment]);
     }
   }
@@ -93,30 +87,6 @@ function isMemberActiveInSeptemberFebruary(date, year) {
   } else {
     return false;
   }
-}
-
-function isPaymentWithinActivePeriod(date, year) {
-  var month = date.getMonth() + 1; // getMonth() returns zero-indexed month, so add 1 to get the actual month
-
-  // Define start and end dates for each period
-  var period1Start = new Date(year, 2); // March
-  var period1End = new Date(year, 7); // August
-  var period2Start = new Date(year, 8); // September
-  var period2End = new Date(year + 1, 1, 0); // February (the last day of February)
-
-  // If payment month is within the first period, check if payment was made within three weeks before start of period or during the period
-  if (month >= 3 && month <= 7) {
-    if ((date >= addDays(period1Start, -21) && date <= period1End)) {
-      return true;
-    }
-  }
-  // If payment month is within the second period, check if payment was made within three weeks before start of period or during the period
-  else if (month >= 9 || month <= 1) {
-    if ((date >= addDays(period2Start, -21) && date <= period2End)) {
-      return true;
-    }
-  }
-  return false;
 }
 
 // Helper function to add days to a Date object
